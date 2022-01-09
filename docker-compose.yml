@@ -1,0 +1,50 @@
+version : '3.0'
+
+
+services:
+  dev:
+    image: maven:3.6.2-jdk-8
+    command: sleep inf
+    volumes:
+     - m2repo:/root/.m2/repository
+     - .:/tn
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk8
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkings_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jm2repo:/var/jenkins_home/.m2/repository
+
+
+  gitlab:
+    image: gitlab/gitlab-ee
+    container_name: gitlab
+    ports:
+      - "80:80"
+    volumes:
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
+
+
+
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss:6.16.0
+    ports:
+     - '8081:8081'
+
+
+
+volumes:
+  m2repo:
+  jenkings_home:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+  jm2repo:
+  
+
